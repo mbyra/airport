@@ -8,6 +8,7 @@ from django.conf.urls import url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('polls/', include('polls.urls')),
+    path('airport/', include('airport.urls'))
 ]
 
 if settings.DEBUG:

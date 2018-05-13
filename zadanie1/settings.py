@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
+    'airport.apps.AirportConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
