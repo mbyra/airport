@@ -1,10 +1,17 @@
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.db import transaction
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from datetime import datetime
+
+from django.views.decorators.http import require_POST
+
 from .models import Flight
 from django.db.models import Q
+
 
 def mainpage(request):
     if request.GET.get('search'):
@@ -15,16 +22,52 @@ def mainpage(request):
         flights = Flight.objects.all().order_by('departure_time')
 
     template = loader.get_template('airport/mainpage.html')
-    context = {'flights_list' : flights}
+    context = {'flights_list': flights}
     return HttpResponse(template.render(context, request))
+
 
 def flight_details(request, flight_no):
     flight = get_object_or_404(Flight, pk=flight_no)
 
-    #TODO get passengers and tickets
+    # TODO get passengers and tickets
 
     template = loader.get_template('airport/flight_details.html')
-    context = {'flight' : flight}
+    context = {'flight': flight}
     return HttpResponse(template.render(context, request))
 
+@transaction.atomic
+@require_POST
+def login_or_register(request):
+    # TODO maybe I should create django form?
+    # chyba mozna tez sprawdzac request.POST['register']='on'?
+    # TODO zrobic zeby to bylo w okienku
+    if 'register' in request.POST:
+        if User.objects.all().filter(username=request.POST['email']).exists():
+            register_success = True
+            context = {'register_success' : register_success}
+            return render(request, 'airport/account.html', context)
+        else:
+            register_failure = True
+            user = User.objects.create_user(
+                username=request.POST['email'], password=request.POST['password'])
+            login(request, user)
+            context = {'register_failure' : register_failure}
+            return render(request, 'airport/account.html', context)
+    else:
+        user = authenticate(username=request.POST['email'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            login_success = True
+            context = {'login_success': login_success}
+            return render(request, 'airport/account.html', context)
+        else:
+            login_failure = False
+            context = {'login_failure': login_failure}
+            return render(request, 'airport/account.html', context)
+
+def logout_view(request):
+    logout(request)
+    logout_success = True
+    context = {'logout_success': logout_success}
+    return render(request, 'airport/account.html', context)
 

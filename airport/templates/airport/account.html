@@ -1,0 +1,38 @@
+{% extends 'airport/mainpage.html' %}
+
+{% block content %}
+
+    <div class="text-center">
+        {% if register_failure %}
+            <div class="alert alert-danger text-center">
+                Account for this email has already been registered.
+            </div>
+        {% endif %}
+
+        {% if register_success%}
+            <div class="alert alert-success text-center">
+                Successfully created new account. You are logged in.
+            </div>
+        {% endif %}
+
+        {% if login_success %}
+            <div class="alert alert-danger text-center">
+                Email or password incorrect.
+            </div>
+        {% endif %}
+
+        {% if login_failure%}
+            <div class="alert alert-success text-center">
+                You are logged in.
+            </div>
+        {% endif %}
+
+        {% if logout_success%}
+            <div class="alert alert-success text-center">
+                You have successfully logged out.
+            </div>
+        {% endif %}
+        <a class="btn btn-primary" href="{% url 'airport:mainpage' %}">Return</a>
+    </div>
+
+{% endblock %}
