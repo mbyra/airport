@@ -6,16 +6,25 @@ from datetime import datetime
 from .models import Flight
 from django.db.models import Q
 
-def index(request):
-    # if request.GET.get('search'):
-    #     search = datetime.strptime(request.GET['search'], '%Y-%m-%d')
-    #     flights = Flight.objects.filter(Q(startTime__day=search.day, startTime__month=search.month) |
-    #                                     Q(endTime__day=search.day, endTime__month=search.month)).order_by('startTime')
-    # else:
-    #     flights = Flight.objects.all().order_by('startTime')
-    #
-    # template = loader.get_template('airport/mainpage.html')
-    # context = {'flights_list' : flights}
-    # return HttpResponse(template.render(context, request))
-    return HttpResponse("You're looking the list of flights.")
+def mainpage(request):
+    if request.GET.get('search'):
+        search = datetime.strptime(request.GET['search'], '%Y-%m-%d')
+        flights = Flight.objects.filter(Q(startTime__day=search.day, startTime__month=search.month) |
+                                        Q(endTime__day=search.day, endTime__month=search.month)).order_by('startTime')
+    else:
+        flights = Flight.objects.all().order_by('departure_time')
+
+    template = loader.get_template('airport/mainpage.html')
+    context = {'flights_list' : flights}
+    return HttpResponse(template.render(context, request))
+
+def flight_details(request, flight_no):
+    flight = get_object_or_404(Flight, pk=flight_no)
+
+    #TODO get passengers and tickets
+
+    template = loader.get_template('airport/flight_details.html')
+    context = {'flight' : flight}
+    return HttpResponse(template.render(context, request))
+
 

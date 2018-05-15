@@ -4,7 +4,8 @@ from django.db.models import Q
 from datetime import timedelta
 
 class Airplane(models.Model):
-    number = models.CharField(max_length=10, unique=True)
+    # number = models.CharField(max_length=10, unique=True)
+    number = models.IntegerField(unique=True)
     capacity = models.IntegerField()
 
     def __str__(self):
@@ -24,7 +25,7 @@ class Flight(models.Model):
 
     def __str__(self):
         # TODO complete return string
-        return 'Flight from %s to %s'
+        return 'Flight from %s to %s' % (self.source, self.destination)
 
     def clean(self):
         #TODO check all requirements

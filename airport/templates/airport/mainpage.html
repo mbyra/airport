@@ -1,11 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
 <body>
+
+    <h2>List of flights:</h2>
 	{% if flights_list %}
 	    <ul>
 	    {% for flight in flights_list %}
-	       <li>Flight from {{ flight.source }} to {{ flight.destination }}</li>
+            <li><a href="{% url 'airport:flight_details' flight.pk %}">Flight from {{ flight.source }} to {{ flight.destination }}</a></li>
 	    {% endfor %}
 	    </ul>
 	{% else %}
 	    <p>No flights are available.</p>
 	{% endif %}
+
 </body>
+</html>
