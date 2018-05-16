@@ -42,25 +42,31 @@ def login_or_register(request):
     # chyba mozna tez sprawdzac request.POST['register']='on'?
     # TODO zrobic zeby to bylo w okienku
     if 'register' in request.POST:
+        print("uzytkownik chce sie zarejestrowac")
         if User.objects.all().filter(username=request.POST['email']).exists():
-            register_success = True
-            context = {'register_success' : register_success}
+            print("uzytkownik juz istnieje - blad")
+            register_failure = True
+            context = {'register_failure' : register_failure}
             return render(request, 'airport/account.html', context)
         else:
-            register_failure = True
+            print("uzytkownik nie istnieje - tworze nowe konto")
+            register_success = True
             user = User.objects.create_user(
                 username=request.POST['email'], password=request.POST['password'])
             login(request, user)
-            context = {'register_failure' : register_failure}
+            context = {'register_success' : register_success}
             return render(request, 'airport/account.html', context)
     else:
+        print("uzytkownik chce sie zalogowac")
         user = authenticate(username=request.POST['email'], password=request.POST['password'])
         if user is not None:
+            print("uzytkownik istnieje")
             login(request, user)
             login_success = True
             context = {'login_success': login_success}
             return render(request, 'airport/account.html', context)
         else:
+            print("uzytkownik nie istnieje")
             login_failure = False
             context = {'login_failure': login_failure}
             return render(request, 'airport/account.html', context)

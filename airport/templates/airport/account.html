@@ -15,19 +15,19 @@
             </div>
         {% endif %}
 
-        {% if login_success %}
+        {% if login_failure %}
             <div class="alert alert-danger text-center">
                 Email or password incorrect.
             </div>
         {% endif %}
 
-        {% if login_failure%}
+        {% if login_success %}
             <div class="alert alert-success text-center">
                 You are logged in.
             </div>
         {% endif %}
 
-        {% if logout_success%}
+        {% if logout_success %}
             <div class="alert alert-success text-center">
                 You have successfully logged out.
             </div>
