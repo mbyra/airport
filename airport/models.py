@@ -31,7 +31,9 @@ class Flight(models.Model):
         #TODO check all requirements
         pass
 
-class Passenger(models.Model):
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
 
@@ -41,7 +43,7 @@ class Passenger(models.Model):
         return 'Passenger %s %s' % (self.first_name, self.last_name)
 
 class Ticket(models.Model):
-    passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+    passenger = models.ForeignKey(User, on_delete=models.CASCADE)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
 
     def clean(self):

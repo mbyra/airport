@@ -69,19 +69,21 @@
                 <form action="{% url 'airport:login_or_register' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="email">Email address:</label>
-                        <input type="email" class="form-control" id="email" name="email" autocomplete="username">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password:</label>
                         <input type="password" class="form-control" id="password" name="password"
                                autocomplete="current-password">
                     </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="register" name="register"> I want to create a new
-                            account</label>
-                    </div>
+{#                    <div class="checkbox">#}
+{#                        <label><input type="checkbox" id="register" name="register"> I want to create a new#}
+{#                            account</label>#}
+{#                    </div>#}
+
                     <button type="submit" class="btn btn-default">Submit</button>
+                    <a href="{% url 'airport:registration_form' %}">Register</a>
                 </form>
             </div>
 

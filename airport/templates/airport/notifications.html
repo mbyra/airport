@@ -9,9 +9,21 @@
             </div>
         {% endif %}
 
-        {% if register_success%}
+        {% if registration_success %}
             <div class="alert alert-success text-center">
-                Successfully created new account. You are logged in.
+                Successfully created a new account. You are logged in.
+            </div>
+        {% endif %}
+
+        {% if registration_post_data_error %}
+            <div class="alert alert-danger text-center">
+                Error in data retrieved to create account. Try again.
+            </div>
+        {% endif %}
+
+        {% if registration_user_exists %}
+            <div class="alert alert-danger text-center">
+                Account with given username exists. Try to log in or create another account.
             </div>
         {% endif %}
 
