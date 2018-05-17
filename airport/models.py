@@ -4,7 +4,6 @@ from django.db.models import Q
 from datetime import timedelta
 
 class Airplane(models.Model):
-    # number = models.CharField(max_length=10, unique=True)
     number = models.IntegerField(unique=True)
     capacity = models.IntegerField()
 

@@ -38,7 +38,7 @@
         {% if request.user.is_authenticated %}
 
             <span class="text-white">
-                Logged in as {{ request.user.username }}.
+                Logged in as {{ request.user.first_name }} {{ request.user.last_name }}.
             </span>
             <a class="btn btn-secondary" href="{% url 'airport:logout_view' %}">
                 Logout

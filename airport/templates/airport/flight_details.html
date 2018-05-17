@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends 'airport/base.html' %}
 
-<body>
-    <h2>Details of flight {{ flight.pk }}:</h2>
+{% block content %}
+
+    <h2>Details of flight no {{ flight.pk }}:</h2>
     <p>From: {{ flight.source }} at {{ flight.departure_time }}</p>
     <p>To: {{ flight.destination }} at {{ flight.arrival_time }}</p>
-    <h3>List of passengers:</h3>
-</body>
+    {% if request.user.is_authenticated %}
+        <button type="button" class="btn btn-primary active">Buy a ticket</button>
+    {% else %}
+        <button type="button" class="btn btn-primary disabled">Log in to buy ticket</button>
+    {% endif %}
 
-</html>
+    <h3>List of passengers:</h3>
+
+{% endblock %}
