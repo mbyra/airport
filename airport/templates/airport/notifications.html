@@ -44,6 +44,12 @@
                 You have successfully logged out.
             </div>
         {% endif %}
+
+        {% if no_such_flight %}
+            <div class="alert alert-danger text-center">
+                There is no such a flight.
+            </div>
+        {% endif %}
         <a class="btn btn-primary" href="{% url 'airport:mainpage' %}">Return</a>
     </div>
 

@@ -3,15 +3,53 @@
 {% block content %}
 
     <h2 class="mt-5">List of flights:</h2>
+    <form class="form-inline" method="GET" action="{% url 'airport:mainpage' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="searchfrom">From:</label>
+            <input type="date" id="searchfrom" name="searchfrom" class="form-control text-center"
+                   value={% if 'searchfrom' in request.build_absolute_uri %}"{{ searchfrom }}"/>{% else %}"2017-01-01"/>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="searchto">From:</label>
+            <input type="date" id="searchto" name="searchto" class="form-control text-center"
+                   value={% if 'searchto' in request.build_absolute_uri %}"{{ searchto }}"{% else %}"2020-12-31"{% endif %}/>
+        </div>
+        <button type="submit" class="btn btn-default">Filter</button>
+    </form>
     {% if flights_list %}
-        <ul>
+        <table class="table table-hover">
+            <thead>
+            <th scope="col">No</th>
+            <th scope="col">Departure</th>
+            <th scope="col">From</th>
+            <th scope="col">Arrival</th>
+            <th scope="col">To</th>
+            </thead>
+            <tbody>
             {% for flight in flights_list %}
-                <li><a href="{% url 'airport:flight_details' flight.pk %}">Flight from {{ flight.source }}
-                    to {{ flight.destination }}</a></li>
+                <tr class='clickable-row' data-href="{% url 'airport:flight_details' flight.pk %}">
+                    <td>{{ flight.pk }}</td>
+                    <td>{{ flight.source }}</td>
+                    <td>{{ flight.departure_time }}</td>
+                    <td>{{ flight.destination }}</td>
+                    <td>{{ flight.arrival_time }}</td>
+                </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
+
     {% else %}
         <p>No flights are available.</p>
     {% endif %}
 
+    <script>
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+
 {% endblock %}
+

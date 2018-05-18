@@ -1,4 +1,3 @@
-# from django.contrib.auth.models import User
 from .models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
@@ -6,34 +5,46 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.views.decorators.http import require_POST
 
-from .models import Flight
+from .models import Flight, Ticket
 from django.db.models import Q
 
 
 def mainpage(request):
-    if request.GET.get('search'):
-        search = datetime.strptime(request.GET['search'], '%Y-%m-%d')
-        flights = Flight.objects.filter(Q(startTime__day=search.day, startTime__month=search.month) |
-                                        Q(endTime__day=search.day, endTime__month=search.month)).order_by('startTime')
-    else:
-        flights = Flight.objects.all().order_by('departure_time')
-
     template = loader.get_template('airport/mainpage.html')
-    context = {'flights_list': flights}
+
+    if 'searchfrom' not in request.GET:
+        flights = Flight.objects.all()
+        context = {'flights_list': flights.order_by('departure_time')}
+    else:
+        searchfrom = datetime.strptime(request.GET['searchfrom'], '%Y-%m-%d')
+        flights = Flight.objects.filter(Q(departure_time__gte=searchfrom))
+        searchto = datetime.strptime(request.GET['searchto'], '%Y-%m-%d')
+        flights = flights.filter(Q(departure_time__lte=(searchto)))
+        context = {'flights_list': flights.order_by('departure_time'), 'searchfrom': request.GET['searchfrom'],
+                   'searchto': request.GET['searchto']}
+
+
     return HttpResponse(template.render(context, request))
 
 
 def flight_details(request, flight_no):
     flight = get_object_or_404(Flight, pk=flight_no)
 
-    # TODO get passengers and tickets
+    departure_time_str = flight.departure_time.strftime("%Y-%m-%d %H:%M")
+    arrival_time_str = flight.arrival_time.strftime("%Y-%m-%d %H:%M")
+
+    tickets = Ticket.objects.filter(flight=flight)
+    passengers = []
+    for ticket in tickets:
+        passengers.append(str(ticket.passenger))
 
     template = loader.get_template('airport/flight_details.html')
-    context = {'flight': flight}
+    context = {'flight': flight, 'departure_time_str': departure_time_str, 'arrival_time_str': arrival_time_str,
+               'passengers': passengers}
     return HttpResponse(template.render(context, request))
 
 
@@ -42,7 +53,7 @@ def flight_details(request, flight_no):
 def login_or_register(request):
     if 'register' in request.POST:
         print("uzytkownik chce sie zarejestrowac")
-        context = {'registration_ongoing' : True}
+        context = {'registration_ongoing': True}
         return render(request, 'airport/notifications.html', context)
     else:
         print("uzytkownik chce sie zalogowac")
@@ -59,8 +70,10 @@ def login_or_register(request):
             context = {'login_failure': login_failure}
             return render(request, 'airport/notifications.html', context)
 
+
 def registration_form(request):
     return render(request, 'airport/register.html')
+
 
 def register(request):
     print("uzytkownik chce sie zarejestrowac")
@@ -79,7 +92,7 @@ def register(request):
         if 'lastname' not in request.POST:
             print('lastname not in post')
 
-        context = {'registration_post_data_error' : True}
+        context = {'registration_post_data_error': True}
         return render(request, 'airport/notifications.html', context)
 
     elif User.objects.all().filter(username=request.POST['username']).exists():
@@ -94,12 +107,36 @@ def register(request):
             last_name=request.POST['lastname']
         )
         login(request, user)
-        context = {'registration_success': True,}
+        context = {'registration_success': True, }
         return render(request, 'airport/notifications.html', context)
 
 
 def logout_view(request):
     logout(request)
-    logout_success = True
-    context = {'logout_success': logout_success}
+    context = {'logout_success': True}
     return render(request, 'airport/notifications.html', context)
+
+
+def buy_ticket(request, flight_no):
+    flight = Flight.objects.filter(pk=flight_no)[0]
+    if flight is None:
+        context = {'no_such_flight': True}
+        return render(request, 'airport/notifications.html', context)
+
+    tickets = Ticket.objects.filter(flight=flight)
+
+    from django.core.exceptions import ValidationError
+    try:
+        Ticket.objects.create(passenger=request.user, flight=flight)
+    except ValidationError:
+        passengers = []
+        for ticket in tickets:
+            passengers.append(str(ticket.passenger))
+        context = {'flight': flight, 'passengers': passengers, 'no_places': True}
+        return render(request, 'airport/flight_details.html', context)
+
+    passengers = []
+    for ticket in tickets:
+        passengers.append(str(ticket.passenger))
+    context = {'flight': flight, 'passengers': passengers, 'ticket_bought': True}
+    return render(request, 'airport/flight_details.html', context)

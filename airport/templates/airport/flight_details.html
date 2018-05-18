@@ -5,12 +5,28 @@
     <h2>Details of flight no {{ flight.pk }}:</h2>
     <p>From: {{ flight.source }} at {{ flight.departure_time }}</p>
     <p>To: {{ flight.destination }} at {{ flight.arrival_time }}</p>
+    <p>Places: {{ passengers|length }} / {{ flight.airplane.capacity }}</p>
     {% if request.user.is_authenticated %}
-        <button type="button" class="btn btn-primary active">Buy a ticket</button>
+        <a href="{% url 'airport:buy_ticket' flight.pk %}" class="btn btn-primary active">Buy a ticket</a>
     {% else %}
-        <button type="button" class="btn btn-primary disabled">Log in to buy ticket</button>
+        <a href=# class="btn btn-primary active">Log in to buy ticket</a>
     {% endif %}
 
-    <h3>List of passengers:</h3>
+    {% if ticket_bought %}
+        <div class="alert alert-success text-center">
+            You bought a ticket for this flight.
+        </div>
+    {% endif %}
+        {% if no_places %}
+        <div class="alert alert-danger text-center">
+            There are no places left in this airplane.
+        </div>
+    {% endif %}
 
+    <h4>List of passengers:</h4>
+    <ul class="list-group">
+    {% for passenger in passengers %}
+        <li class="list-group-item">{{ passenger }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

@@ -41,7 +41,7 @@ for i in range(60):
     destination = choice(airports)
     airports.append(source)
     departure_time = timezone.now() + timedelta(hours=randint(1, 20), minutes=randint(0,59))
-    arrival_time = departure_time + timedelta(hours=randint(1, 20), minutes=randint(0,59))
+    arrival_time = departure_time + + timedelta(minutes=30) + timedelta(hours=randint(1, 20), minutes=randint(0,59))
     Flight.objects.create(airplane=airplane, source=source, destination=destination, departure_time=departure_time, arrival_time=arrival_time)
 
 print("Flights created")
