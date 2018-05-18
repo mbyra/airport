@@ -9,7 +9,7 @@
     {% if request.user.is_authenticated %}
         <a href="{% url 'airport:buy_ticket' flight.pk %}" class="btn btn-primary active">Buy a ticket</a>
     {% else %}
-        <a href=# class="btn btn-primary active">Log in to buy ticket</a>
+        <a href=# class="btn btn-primary disabled">Log in to buy ticket</a>
     {% endif %}
 
     {% if ticket_bought %}

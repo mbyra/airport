@@ -45,3 +45,23 @@ for i in range(60):
     Flight.objects.create(airplane=airplane, source=source, destination=destination, departure_time=departure_time, arrival_time=arrival_time)
 
 print("Flights created")
+
+# Make every passenger buy 2 random tickets
+for passenger in User.objects.all():
+    flight = choice(Flight.objects.all())
+
+    from django.core.exceptions import ValidationError
+    try:
+        Ticket.objects.create(passenger=passenger, flight=flight)
+    except ValidationError:
+        pass # airplane is full
+
+    flight = choice(Flight.objects.all())
+
+    from django.core.exceptions import ValidationError
+    try:
+        Ticket.objects.create(passenger=passenger, flight=flight)
+    except ValidationError:
+        pass # airplane is full
+
+print("Tickets created")
