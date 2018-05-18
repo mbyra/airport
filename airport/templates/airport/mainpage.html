@@ -2,8 +2,8 @@
 
 {% block content %}
 
-    <h2 class="mt-5">List of flights:</h2>
-    <form class="form-inline" method="GET" action="{% url 'airport:mainpage' %}">
+    <h2 class="mt-5">List of flights</h2>
+    <form class="form-inline mt-4 my-4" method="GET" action="{% url 'airport:mainpage' %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="searchfrom">From:</label>

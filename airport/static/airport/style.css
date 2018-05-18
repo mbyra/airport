@@ -25,7 +25,7 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
-.footer {
+footer {
   position: fixed;
   bottom: 0;
   width: 100%;

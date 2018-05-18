@@ -2,51 +2,51 @@
 
 {% block content %}
 
-    <div class="text-center">
+    <div class=" container text-center mt-5 my-5 w-50 ">
         {% if register_failure %}
-            <div class="alert alert-danger text-center">
+            <div class="alert alert-danger text-center justify-content-center">
                 Account for this email has already been registered.
             </div>
         {% endif %}
 
         {% if registration_success %}
-            <div class="alert alert-success text-center">
+            <div class="alert alert-success text-center justify-content-center">
                 Successfully created a new account. You are logged in.
             </div>
         {% endif %}
 
         {% if registration_post_data_error %}
-            <div class="alert alert-danger text-center">
+            <div class="alert alert-danger text-center justify-content-center">
                 Error in data retrieved to create account. Try again.
             </div>
         {% endif %}
 
         {% if registration_user_exists %}
-            <div class="alert alert-danger text-center">
+            <div class="alert alert-danger text-center justify-content-center">
                 Account with given username exists. Try to log in or create another account.
             </div>
         {% endif %}
 
         {% if login_failure %}
-            <div class="alert alert-danger text-center">
+            <div class="alert alert-danger text-center justify-content-center">
                 Email or password incorrect.
             </div>
         {% endif %}
 
         {% if login_success %}
-            <div class="alert alert-success text-center">
+            <div class="alert alert-success text-center justify-content-center">
                 You are logged in.
             </div>
         {% endif %}
 
         {% if logout_success %}
-            <div class="alert alert-success text-center">
+            <div class="alert alert-success text-center justify-content-center">
                 You have successfully logged out.
             </div>
         {% endif %}
 
         {% if no_such_flight %}
-            <div class="alert alert-danger text-center">
+            <div class="alert alert-danger text-center justify-content-center">
                 There is no such a flight.
             </div>
         {% endif %}

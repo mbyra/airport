@@ -2,14 +2,14 @@
 
 {% block content %}
 
-    <h2>Details of flight no {{ flight.pk }}:</h2>
-    <p>From: {{ flight.source }} at {{ flight.departure_time }}</p>
-    <p>To: {{ flight.destination }} at {{ flight.arrival_time }}</p>
-    <p>Places: {{ passengers|length }} / {{ flight.airplane.capacity }}</p>
+    <h2 class="mt-4">Details of flight no {{ flight.pk }}:</h2>
+    <p><b>From:</b> {{ flight.source }} at {{ flight.departure_time }}</p>
+    <p><b>To:</b> {{ flight.destination }} at {{ flight.arrival_time }}</p>
+    <p><b>Places:</b> {{ passengers|length }} / {{ flight.airplane.capacity }}</p>
     {% if request.user.is_authenticated %}
-        <a href="{% url 'airport:buy_ticket' flight.pk %}" class="btn btn-primary active">Buy a ticket</a>
+        <a href="{% url 'airport:buy_ticket' flight.pk %}" class="btn btn-primary active mt-4 my-4">Buy a ticket</a>
     {% else %}
-        <a href=# class="btn btn-primary disabled">Log in to buy ticket</a>
+        <a href=# class="btn btn-primary disabled mt-4 my-4">Log in to buy ticket</a>
     {% endif %}
 
     {% if ticket_bought %}
@@ -23,7 +23,7 @@
         </div>
     {% endif %}
 
-    <h4>List of passengers:</h4>
+    <h4 class="mt-4">List of passengers:</h4>
     <ul class="list-group">
     {% for passenger in passengers %}
         <li class="list-group-item">{{ passenger }}</li>

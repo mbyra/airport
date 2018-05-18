@@ -30,7 +30,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'airport:mainpage' %}">Airport</a>
+            <a class="navbar-brand" href="{% url 'airport:mainpage' %}">Airport main page</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -104,11 +104,16 @@
     <!-- /.container -->
 </main>
 
-<footer class="footer">
-    <div class="container">
-        <span class="text-muted">2018, Marcin Byra. Project for course 'WWW Applications' at University of Warsaw.</span>
-    </div>
-</footer>
+{#<footer class="footer">#}
+{#    <div class="container">#}
+{#        <span class="text-center text-muted ">2018, Marcin Byra. Project for course 'WWW Applications' at University of Warsaw.</span>#}
+{#    </div>#}
+{#</footer>#}
+
+    <footer class="text-center text-muted mt-5">
+        2018 Marcin Byra. Project for WWW Applications course at University of Warsaw.
+    </footer>
+
 <!-- Bootstrap core JavaScript -->
 {#<script src="vendor/jquery/jquery.min.js"></script>#}
 {#<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>#}
