@@ -7,7 +7,8 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('airport/', include('airport.urls'))
+    path('airport/', include('airport.urls')),
+    path('', include('airport.urls')),
 ]
 
 if settings.DEBUG:

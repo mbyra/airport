@@ -8,23 +8,27 @@
         <div class="form-group">
             <label for="searchfrom">From:</label>
             <input type="date" id="searchfrom" name="searchfrom" class="form-control text-center"
-                   value={% if 'searchfrom' in request.build_absolute_uri %}"{{ searchfrom }}"/>{% else %}"2017-01-01"/>{% endif %}
+                   value={% if 'searchfrom' in request.build_absolute_uri %}"{{ searchfrom }}"/>{% else %}
+                       "2017-01-01"/>{% endif %}
         </div>
         <div class="form-group">
             <label for="searchto">From:</label>
             <input type="date" id="searchto" name="searchto" class="form-control text-center"
-                   value={% if 'searchto' in request.build_absolute_uri %}"{{ searchto }}"{% else %}"2020-12-31"{% endif %}/>
+                   value={% if 'searchto' in request.build_absolute_uri %}"{{ searchto }}"{% else %}
+                       "2020-12-31"{% endif %}/>
         </div>
         <button type="submit" class="btn btn-default">Filter</button>
     </form>
     {% if flights_list %}
         <table class="table table-hover">
             <thead>
-            <th scope="col">No</th>
-            <th scope="col">Departure</th>
-            <th scope="col">From</th>
-            <th scope="col">Arrival</th>
-            <th scope="col">To</th>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Departure</th>
+                <th scope="col">From</th>
+                <th scope="col">Arrival</th>
+                <th scope="col">To</th>
+            </tr>
             </thead>
             <tbody>
             {% for flight in flights_list %}
