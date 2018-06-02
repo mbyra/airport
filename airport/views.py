@@ -1,16 +1,13 @@
-from .models import User
+from datetime import datetime
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from django.urls import reverse
-from datetime import datetime, timedelta
-
 from django.views.decorators.http import require_POST
 
 from .models import Flight, Ticket
-from django.db.models import Q
+from .models import User
 
 
 def mainpage(request):

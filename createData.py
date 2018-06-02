@@ -1,10 +1,11 @@
 # run with: python manage.py shell < createData.py
 
+from datetime import timedelta
 from random import randint, choice
-from airport.models import User, Flight, Airplane, Ticket
-from datetime import datetime, timedelta
+
 from django.utils import timezone
-import pytz
+
+from airport.models import User, Flight, Airplane, Ticket
 
 airports = ['Lublin', 'Warszawa', 'Wroclaw', 'Opole', 'Krakow', 'Poznan', 'Szczecin', 'Gdansk', 'Radom', 'Zamosc',
             'Zakopane', 'Bialystok', 'Lodz', 'Targowek', 'Modlin']
