@@ -1,17 +1,19 @@
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 
 from .models import Flight, Ticket
 from .models import User
 
 
 def mainpage(request):
-
     if 'searchfrom' not in request.GET:
         flights = Flight.objects.all()
         context = {'flights_list': flights.order_by('departure_time')}
@@ -38,6 +40,7 @@ def flight_details(request, flight_no):
                'passengers': passengers}
 
     return render(request, 'airport/flight_details.html', context)
+
 
 @transaction.atomic
 @require_POST
@@ -114,3 +117,24 @@ def buy_ticket(request, flight_no):
 
     context = {'flight': flight, 'passengers': passengers, 'ticket_bought': True}
     return render(request, 'airport/flight_details.html', context)
+
+
+@csrf_exempt
+@require_POST
+def crew_login(request):
+    print("jestem w crew login")
+    if 'username' not in request.POST or 'password' not in request.POST:
+        print("jestem w crew login w pierwszym ifie")
+        # TODO przerobic na moj typ alertu, że nie podano hasla lub loginu
+        raise PermissionDenied
+
+    who = authenticate(username=request.POST['username'], password=request.POST['password'])
+    if who is None:
+        print("jestem w crew login w drugim ifie ifie")
+        # TODO przerobic na moj typ alertu, ze dane sie nie zgadzaja
+        raise PermissionDenied
+
+    print("jestem w crew login przed returnem")
+    return HttpResponse()
+
+
