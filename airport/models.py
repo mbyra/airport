@@ -28,6 +28,7 @@ class Crew(models.Model):
     def __str__(self):
         return 'Crew of captain %s %s' % (self.captain_first_name, self.captain_last_name)
 
+
 class Flight(models.Model):
     airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
     crew = models.ForeignKey(Crew, on_delete=models.CASCADE, blank=True, null=True)
@@ -59,14 +60,17 @@ class Flight(models.Model):
             # Option 1: This flight is all in one day
 
             # get all flights of this plane in this day
-            flights_this_day = Flight.objects.filter(airplane=self.airplane).filter(Q(departure_time__day=self.departure_time.day) |  Q(departure_time__day=self.arrival_time))
+            flights_this_day = Flight.objects.filter(airplane=self.airplane).filter(
+                Q(departure_time__day=self.departure_time.day) | Q(departure_time__day=self.arrival_time))
             if len(flights_this_day) > 4:
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
         else:
             # Option 2: This flight starts in one day and ends in next day
 
-            flights_starting_this_day = Flight.objects.filter(airplane=self.airplane).filter(Q(departure_time__day=self.departure_time.day) |  Q(departure_time__day=self.arrival_time))
-            flights_ending_this_day = Flight.objects.filter(airplane=self.airplane).filter(Q(arrival_time__day=self.departure_time.day) |  Q(arrival_time__day=self.arrival_time))
+            flights_starting_this_day = Flight.objects.filter(airplane=self.airplane).filter(
+                Q(departure_time__day=self.departure_time.day) | Q(departure_time__day=self.arrival_time))
+            flights_ending_this_day = Flight.objects.filter(airplane=self.airplane).filter(
+                Q(arrival_time__day=self.departure_time.day) | Q(arrival_time__day=self.arrival_time))
 
             if len(flights_starting_this_day) > 4:
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
@@ -74,6 +78,11 @@ class Flight(models.Model):
             if len(flights_ending_this_day) > 4:
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
 
+        if flights.exclude(pk=self.pk) \
+                .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
+                        | Q(arrival_time__range=[self.departure_time, self.arrival_time])) \
+                .filter(crew=self.crew).exists():
+            raise ValidationError("This crew has another flight in this time.")
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=20)
@@ -97,4 +106,3 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super(Ticket, self).save(*args, **kwargs)
-

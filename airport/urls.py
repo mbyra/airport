@@ -13,5 +13,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout_view'),
     path('crew/login/', views.crew_login, name='crew_login'),
     path('crew/get_flight_and_crew_lists/', views.get_flight_and_crew_lists, name='get_flight_and_crew_lists'),
+    path('crew/assign_crew/', views.assign_crew, name='assign_crew'),
 
 ]

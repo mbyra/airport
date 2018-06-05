@@ -11,6 +11,7 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import Flight, Ticket, Crew
 from .models import User
+from django.core.exceptions import ValidationError
 
 
 def mainpage(request):
@@ -103,7 +104,6 @@ def buy_ticket(request, flight_no):
         context = {'no_such_flight': True}
         return render(request, 'airport/notifications.html', context)
 
-    from django.core.exceptions import ValidationError
     try:
         ticket = Ticket.objects.create(passenger=request.user, flight=flight)
         # ticket.full_clean()
@@ -172,3 +172,39 @@ def get_flight_and_crew_lists(request):
         'flights': flights,
         'crews': crews
     })
+
+
+
+
+@transaction.atomic
+@require_POST
+@csrf_exempt
+def assign_crew(request):
+    if 'username' not in request.POST or 'password' not in request.POST or 'flight_pk' not in request.POST \
+            or 'captain_first_name' not in request.POST or 'captain_last_name' not in request.POST:
+        print("assign_crew: Error in POST data")
+        raise PermissionDenied
+
+    user = authenticate(username=request.POST['username'], password=request.POST['password'])
+    if user is None:
+        print("assign_crew: could not authenticate user")
+        raise PermissionDenied
+
+    flight = Flight.objects.filter(pk=request.POST['flight_pk'])[0]
+    crew = Crew.objects.filter(captain_first_name=request.POST['captain_first_name'], captain_last_name=request.POST['captain_last_name'])[0]
+
+    try:
+        flight.crew = crew
+        # validation in model
+    except ValidationError:
+        print("assign_crew: could not assign crew to this flight")
+        raise PermissionDenied
+
+    print("assign_crew: succsessfully assigned crew to flight")
+
+    return HttpResponse()
+
+
+
+
+
