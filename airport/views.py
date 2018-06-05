@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 
-from .models import Flight, Ticket
+from .models import Flight, Ticket, Crew
 from .models import User
 
 
@@ -138,7 +138,7 @@ def crew_login(request):
     return HttpResponse()
 
 
-def get_flight_list(request):
+def get_flight_and_crew_lists(request):
     print("jestem w get_flight_list")
 
     # check if this request contains day to filter or not:
@@ -155,11 +155,20 @@ def get_flight_list(request):
         flights = list(
             Flight.objects.filter(departure_time__year=year, departure_time__month=month, departure_time__day=day)
                 .values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
+        crews = list(Crew.objects.values('captain_first_name', 'captain_last_name'))
+        # crews = []
+        # for flight in flights:
+        #     if flight.crew is not None:
+        #         crews.append({'captain_first_name': flight.crew.captain_first_name,
+        #                       'captain_last_name': flight.crew.captain_last_name})
+        # print("filtered crews:")
     else:
         # this request does not contain day to filter, so return all flights
         print("jestem w get_flight_list w galezi bez filtrowania")
         flights = list(Flight.objects.values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
+        crews = list(Crew.objects.values('captain_first_name', 'captain_last_name'))
 
     return JsonResponse({
-        'flights': flights
+        'flights': flights,
+        'crews': crews
     })

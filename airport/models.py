@@ -18,8 +18,19 @@ class Airplane(models.Model):
             raise ValidationError('Airplane must have at least 20 places')
 
 
+class Crew(models.Model):
+    captain_first_name = models.CharField(max_length=20)
+    captain_last_name = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('captain_first_name', 'captain_last_name')
+
+    def __str__(self):
+        return 'Crew of captain %s %s' % (self.captain_first_name, self.captain_last_name)
+
 class Flight(models.Model):
     airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
+    crew = models.ForeignKey(Crew, on_delete=models.CASCADE, blank=True, null=True)
     source = models.CharField(max_length=20)
     destination = models.CharField(max_length=20)
     departure_time = models.DateTimeField()
@@ -86,3 +97,4 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super(Ticket, self).save(*args, **kwargs)
+

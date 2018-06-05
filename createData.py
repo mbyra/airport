@@ -5,7 +5,7 @@ from random import randint, choice
 
 from django.utils import timezone
 
-from airport.models import User, Flight, Airplane, Ticket
+from airport.models import User, Flight, Airplane, Ticket, Crew
 
 airports = ['Lublin', 'Warszawa', 'Wroclaw', 'Opole', 'Krakow', 'Poznan', 'Szczecin', 'Gdansk', 'Radom', 'Zamosc',
             'Zakopane', 'Bialystok', 'Lodz', 'Targowek', 'Modlin']
@@ -45,7 +45,7 @@ for i in range(60):
     arrival_time = departure_time + + timedelta(minutes=30) + timedelta(hours=randint(1, 20), minutes=randint(0,59))
     Flight.objects.create(airplane=airplane, source=source, destination=destination, departure_time=departure_time, arrival_time=arrival_time)
 
-print("Flights created")
+print("Flights created and got planes assigned")
 
 # Make every passenger buy 2 random tickets
 for passenger in User.objects.all():
@@ -65,4 +65,13 @@ for passenger in User.objects.all():
     except ValidationError:
         pass # airplane is full
 
-print("Tickets created")
+print("Two ickets created for each passenger")
+
+# Create crews
+for i in range(len(fist_names)):
+    first_name = fist_names[i]
+    last_name = choice(last_names)
+    crew = Crew.objects.create(captain_first_name=first_name, captain_last_name=last_name)
+    crew.save()
+
+print("Crews created (not assigned to flights)")

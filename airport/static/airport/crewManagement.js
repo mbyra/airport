@@ -48,7 +48,7 @@ function get_all_flights_list() {
 
     $.ajax({
         type: 'get',
-        url: '/crew/get_flight_list/',
+        url: '/crew/get_flight_and_crew_lists/',
         // data: {
         //     year: selected_date.slice(0, 4),
         //     month: selected_date.slice(5, 7),
@@ -70,6 +70,13 @@ function get_all_flights_list() {
                         ' to ' + destination + ' ' + arrival_time + '</option>');
                 }
             );
+            result['crews'].forEach(crew => {
+
+                    $('#id_crew_select').append(
+                        '<option id="crew_"' + crew.pk + '>Crew of captain ' + crew.captain_first_name + ' '
+                        + crew.captain_last_name + '</option>');
+                }
+            );
         },
         error: function () {
             console.log("fail w get flight list");
@@ -87,7 +94,7 @@ function get_filtered_flights_list() {
 
     $.ajax({
         type: 'get',
-        url: '/crew/get_flight_list/',
+        url: '/crew/get_flight_and_crew_lists/',
         data: {
             year: selected_day.slice(0, 4),
             month: selected_day.slice(5, 7),
@@ -107,6 +114,13 @@ function get_filtered_flights_list() {
                         '<option id="' + id + '">' + name +
                         ' from ' + source + ' ' + departure_time +
                         ' to ' + destination + ' ' + arrival_time + '</option>');
+                }
+            );
+            result['crews'].forEach(crew => {
+
+                    $('#id_crew_select').append(
+                        '<option id="crew_"' + crew.pk + '>Crew of captain ' + crew.captain_first_name + ' '
+                        + crew.captain_last_name + '</option>');
                 }
             );
         },
