@@ -12,5 +12,6 @@ urlpatterns = [
     path('buy_ticket/<int:flight_no>/', views.buy_ticket, name='buy_ticket'),
     path('logout/', views.logout_view, name='logout_view'),
     path('crew/login/', views.crew_login, name='crew_login'),
+    path('crew/get_flight_list/', views.get_flight_list, name='get_flight_list'),
 
 ]

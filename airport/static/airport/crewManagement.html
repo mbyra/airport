@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Airport - crew assignment</title>
+    <title>Airport - crew management</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -22,7 +22,6 @@
 
 
     <script src="crewManagement.js"></script>
-    <script src="baseLogin.js"></script>
 
 
 </head>
@@ -92,9 +91,50 @@
     <div id="id_alert_panel"></div>
 
 
-    <section class="container">
-        <h4 id="przywitanie" class="modal-title">przywitanie - </h4>
-    </section>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-sm-10 offset-sm-1 text-center">
+                <form class="form-inline justify-content-center">
+
+                    <div class="form-group">
+                        <label for="id_input_date">Show only flights and available crews in ths day:</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="id_input_date" name="name_input_date" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" id="id_select_day_button">Filter</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-10 offset-sm-1 text-center">
+                <form class="form-inline justify-content-center">
+                    <div class="form-group">
+                        <label for="id_flight_select">Select flight:</label>
+                        <select class="form-control" id="id_flight_select"></select>
+                        <script>get_all_flights_list()</script>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-10 offset-sm-1 text-center">
+                <form class="form-inline justify-content-center">
+                    <div class="form-group">
+                        <label for="id_crew_select">Select crew:</label>
+                        <select class="form-control" id="id_crew_select"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-10 offset-sm-1 text-center">
+                <form class="form-inline justify-content-center">
+                    <div class="btn btn-primary">Assign</div>
+                </form>
+            </div>
+        </div>
+
+        <ul id="id_flight_list" class="list-group">
+        </ul>
+    </div>
+
 </main>
 
 

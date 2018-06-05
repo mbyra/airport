@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from .models import Flight, Ticket
 from .models import User
@@ -138,3 +138,28 @@ def crew_login(request):
     return HttpResponse()
 
 
+def get_flight_list(request):
+    print("jestem w get_flight_list")
+
+    # check if this request contains day to filter or not:
+    if 'day' in request.GET:
+        # this request contains day to filter, check if month and year are also set
+        if 'month' not in request.GET or 'year' not in request.GET:
+            raise PermissionDenied
+
+        print("jestem w get_flight_list w galezi z filtrowaniem")
+        day = request.GET['day']
+        month = request.GET['month']
+        year = request.GET['year']
+        print("requested day:", day, "requested month:", month, "requested year:", year)
+        flights = list(
+            Flight.objects.filter(departure_time__year=year, departure_time__month=month, departure_time__day=day)
+                .values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
+    else:
+        # this request does not contain day to filter, so return all flights
+        print("jestem w get_flight_list w galezi bez filtrowania")
+        flights = list(Flight.objects.values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
+
+    return JsonResponse({
+        'flights': flights
+    })
