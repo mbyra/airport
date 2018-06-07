@@ -195,12 +195,14 @@ def assign_crew(request):
 
     try:
         flight.crew = crew
+        flight.full_clean()
+        flight.save()
         # validation in model
     except ValidationError:
         print("assign_crew: could not assign crew to this flight")
         raise PermissionDenied
 
-    print("assign_crew: succsessfully assigned crew to flight")
+    print("assign_crew: succsessfully assigned crew", crew, " to flight", flight)
 
     return HttpResponse()
 
