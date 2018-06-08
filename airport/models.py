@@ -6,7 +6,6 @@ from django.db import models
 from django.db.models import Q
 
 
-
 class Airplane(models.Model):
     number = models.IntegerField(unique=True)
     capacity = models.IntegerField()
@@ -62,12 +61,12 @@ class Flight(models.Model):
         #         raise ValidationError("The airplane has already planned flight in this time.")
 
         flights = Flight.objects.exclude(pk=self.pk)
-        flightsInTheSameTime = flights.filter(
+        flights_overlapping = flights.filter(
             Q(departure_time__range=[self.departure_time, self.arrival_time]) |
             Q(arrival_time__range=[self.departure_time, self.arrival_time]))
-        if flightsInTheSameTime.filter(airplane=self.airplane).exists():
+        if flights_overlapping.filter(airplane=self.airplane).exists():
             print("drugi if w clean")
-            raise ValidationError('Airplane can not have two flights in the same time!')
+            raise ValidationError("The airplane has already planned flight in this time.")
 
         # check if this airplane won't have more than 4 flights in this day after adding this flight:
         if self.departure_time.day == self.arrival_time.day:

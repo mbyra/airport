@@ -124,22 +124,18 @@ def buy_ticket(request, flight_no):
 def crew_login(request):
     print("jestem w crew login")
     if 'username' not in request.POST or 'password' not in request.POST:
-        print("jestem w crew login w pierwszym ifie")
         # TODO przerobic na moj typ alertu, że nie podano hasla lub loginu
         raise PermissionDenied
 
     who = authenticate(username=request.POST['username'], password=request.POST['password'])
     if who is None:
-        print("jestem w crew login w drugim ifie ifie")
         # TODO przerobic na moj typ alertu, ze dane sie nie zgadzaja
         raise PermissionDenied
 
-    print("jestem w crew login przed returnem")
     return HttpResponse()
 
 
 def get_flight_and_crew_lists(request):
-    print("jestem w get_flight_list")
 
     # check if this request contains day to filter or not:
     if 'day' in request.GET:
@@ -147,24 +143,16 @@ def get_flight_and_crew_lists(request):
         if 'month' not in request.GET or 'year' not in request.GET:
             raise PermissionDenied
 
-        print("jestem w get_flight_list w galezi z filtrowaniem")
         day = request.GET['day']
         month = request.GET['month']
         year = request.GET['year']
-        print("requested day:", day, "requested month:", month, "requested year:", year)
         flights = list(
             Flight.objects.filter(departure_time__year=year, departure_time__month=month, departure_time__day=day)
                 .values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
         crews = list(Crew.objects.values('captain_first_name', 'captain_last_name'))
-        # crews = []
-        # for flight in flights:
-        #     if flight.crew is not None:
-        #         crews.append({'captain_first_name': flight.crew.captain_first_name,
-        #                       'captain_last_name': flight.crew.captain_last_name})
-        # print("filtered crews:")
+
     else:
         # this request does not contain day to filter, so return all flights
-        print("jestem w get_flight_list w galezi bez filtrowania")
         flights = list(Flight.objects.values('pk', 'source', 'destination', 'departure_time', 'arrival_time'))
         crews = list(Crew.objects.values('captain_first_name', 'captain_last_name'))
 
@@ -172,7 +160,6 @@ def get_flight_and_crew_lists(request):
         'flights': flights,
         'crews': crews
     })
-
 
 
 
