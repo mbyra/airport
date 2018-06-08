@@ -45,27 +45,15 @@ class Flight(models.Model):
 
 
     def clean(self):
-        print("jestem w flight clean()")
         # check if departure time is at least 30 minutes before arrival time
         if self.departure_time + timedelta(minutes=30) >= self.arrival_time:
-            print("pierwszy if w clean()")
             raise ValidationError("Departure time should be at least 30 minutes before arrival time.")
-
-        # for all flights of this airplane, check if they don't overlap with new one
-        # flights = Flight.objects.filter(airplane=self.airplane)
-        # for flight in flights:
-        #     if not (
-        #             flight.arrival_time < self.arrival_time and self.arrival_time < flight.departure_time
-        #             and flight.arrival_time < self.departure_time and self.departure_time < flight.arrival_time):
-        #         print("drugi if w clean")
-        #         raise ValidationError("The airplane has already planned flight in this time.")
 
         flights = Flight.objects.exclude(pk=self.pk)
         flights_overlapping = flights.filter(
             Q(departure_time__range=[self.departure_time, self.arrival_time]) |
             Q(arrival_time__range=[self.departure_time, self.arrival_time]))
         if flights_overlapping.filter(airplane=self.airplane).exists():
-            print("drugi if w clean")
             raise ValidationError("The airplane has already planned flight in this time.")
 
         # check if this airplane won't have more than 4 flights in this day after adding this flight:
@@ -76,7 +64,6 @@ class Flight(models.Model):
             flights_this_day = Flight.objects.filter(airplane=self.airplane).filter(
                 Q(departure_time__day=self.departure_time.day) | Q(departure_time__day=self.arrival_time.day))
             if len(flights_this_day) > 4:
-                print("trzeci if w clean")
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
         else:
             # Option 2: This flight starts in one day and ends in next day
@@ -87,30 +74,24 @@ class Flight(models.Model):
                 Q(arrival_time__day=self.departure_time.day) | Q(arrival_time__day=self.arrival_time.day))
 
             if len(flights_starting_this_day) > 4:
-                print("czwarty if w clean")
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
 
             if len(flights_ending_this_day) > 4:
-                print("piaty if w clean")
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
 
         flights_the_same = flights.exclude(pk=self.pk) \
                 .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
                         | Q(arrival_time__range=[self.departure_time, self.arrival_time]))
 
-        print("flighths the same" , flights_the_same)
-
 
         if flights.exclude(pk=self.pk) \
                 .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
                         | Q(arrival_time__range=[self.departure_time, self.arrival_time])) \
                 .filter(crew=self.crew).exists():
-            print("szosty if w clean")
             coto = flights.exclude(pk=self.pk) \
                 .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
                         | Q(arrival_time__range=[self.departure_time, self.arrival_time])) \
                 .filter(crew=self.crew)
-            print("coto,",coto)
             raise ValidationError("This crew has another flight in this time.")
 
 class User(AbstractUser):

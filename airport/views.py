@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -35,7 +35,7 @@ def flight_details(request, flight_no):
     departure_time_str = flight.departure_time.strftime("%Y-%m-%d %H:%M")
     arrival_time_str = flight.arrival_time.strftime("%Y-%m-%d %H:%M")
 
-    passengers = Ticket.objects.filter(flight=flight).values('passenger')
+    passengers = Ticket.objects.filter(flight=flight).values('passenger__first_name', 'passenger__last_name')
 
     context = {'flight': flight, 'departure_time_str': departure_time_str, 'arrival_time_str': arrival_time_str,
                'passengers': passengers}
@@ -109,12 +109,11 @@ def buy_ticket(request, flight_no):
         # ticket.full_clean()
         # ticket.save()
     except ValidationError:
-        passengers = Ticket.objects.filter(flight=flight).values('passenger')
+        passengers = Ticket.objects.filter(flight=flight).values('passenger__first_name', 'passenger__last_name')
         context = {'flight': flight, 'passengers': passengers, 'no_places': True}
         return render(request, 'airport/flight_details.html', context)
 
-    passengers = Ticket.objects.filter(flight=flight).values('passenger')
-
+    passengers = Ticket.objects.filter(flight=flight).values('passenger__first_name', 'passenger__last_name')
     context = {'flight': flight, 'passengers': passengers, 'ticket_bought': True}
     return render(request, 'airport/flight_details.html', context)
 
@@ -122,7 +121,6 @@ def buy_ticket(request, flight_no):
 @csrf_exempt
 @require_POST
 def crew_login(request):
-    print("jestem w crew login")
     if 'username' not in request.POST or 'password' not in request.POST:
         # TODO przerobic na moj typ alertu, że nie podano hasla lub loginu
         raise PermissionDenied
@@ -136,7 +134,6 @@ def crew_login(request):
 
 
 def get_flight_and_crew_lists(request):
-
     # check if this request contains day to filter or not:
     if 'day' in request.GET:
         # this request contains day to filter, check if month and year are also set
@@ -162,7 +159,6 @@ def get_flight_and_crew_lists(request):
     })
 
 
-
 @transaction.atomic
 @require_POST
 @csrf_exempt
@@ -178,7 +174,8 @@ def assign_crew(request):
         raise PermissionDenied
 
     flight = Flight.objects.filter(pk=request.POST['flight_pk'])[0]
-    crew = Crew.objects.filter(captain_first_name=request.POST['captain_first_name'], captain_last_name=request.POST['captain_last_name'])[0]
+    crew = Crew.objects.filter(captain_first_name=request.POST['captain_first_name'],
+                               captain_last_name=request.POST['captain_last_name'])[0]
 
     try:
         flight.crew = crew
@@ -189,11 +186,4 @@ def assign_crew(request):
         print("assign_crew: could not assign crew to this flight")
         raise PermissionDenied
 
-    print("assign_crew: succsessfully assigned crew", crew, " to flight", flight)
-
     return HttpResponse()
-
-
-
-
-

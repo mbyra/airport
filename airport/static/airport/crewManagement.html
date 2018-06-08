@@ -32,8 +32,8 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/">Airport main page</a>
-            <a class="navbar-brand" href="#"><strong>Crew management</strong></a>
+            <a id="id_main_page_button" class="navbar-brand" href="/">Airport main page</a>
+            <a id="id_crew_management_button" class="navbar-brand" href="#"><strong>Crew management</strong></a>
 
             <span class="text-white panel_for_logged_in" id="greeting">Logged in as </span>
             <a id="id_logout_button" class="btn btn-secondary" href="#">
@@ -42,7 +42,7 @@
 
 
             <div id="login_panel">
-                <button type="button" class="btn btn-primary" data-toggle="modal"
+                <button id="id_modal_open_button" type="button" class="btn btn-primary" data-toggle="modal"
                         data-target="#login-modal">
                     Sign in/Sign up *
                 </button>
