@@ -1,3 +1,0 @@
-In the root directory of project:
-export PYTHONPATH=$PYTHONPATH:$PWD
-export DJANGO_SETTINGS_MODULE=zadanie1.settings

@@ -1,21 +1,15 @@
-from datetime import timedelta, datetime
-from time import sleep
+from datetime import timedelta
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.utils import timezone
-
 from django.test import TestCase
+from django.utils import timezone
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
 from airport.models import User, Airplane, Crew, Flight
-
-
-from django.test import LiveServerTestCase
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 airports = ['Lublin', 'Warszawa', 'Wroclaw', 'Opole', 'Krakow', 'Poznan', 'Szczecin', 'Gdansk', 'Radom', 'Zamosc',
             'Zakopane', 'Bialystok', 'Lodz', 'Targowek', 'Modlin']

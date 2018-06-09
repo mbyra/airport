@@ -12,7 +12,6 @@ function login(from_button) {
 
         $('#login_panel').css("display", "none");
     }).fail(() => {
-        console.log("NIE UDALO SIE ZALOGOWAC, JESTEM W LOGIN()");
         $('#greeting').css('display', "").text("Not logged in (management).");
         $('#id_logout_button').css("display", "none");
         $('#id_assign_button').attr("class", "btn btn-primary disabled");
@@ -20,13 +19,13 @@ function login(from_button) {
         $('#login_panel').css("display", "");
 
         if (from_button === false) {
-            console.log("JESTEM W FROM BUTTON FALSE");
             $('#id_alert_panel')
                 .attr("class", "alert alert-info alert-dismissible text-center justify-content-center")
-                .append('<button type="button" class="close" data-dismiss="alert">&times;</button>Please sign in to assign crews. You can use the same account as for main airport app, but session system in crew management app is static and <strong>completely independent</strong> from airport app (e.g. you can be signed in into different accounts in two apps).');
+                .append('<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+                    'Please sign in to assign crews. You can use the same account as for main airport app, but be ' +
+                    'aware that session system in crew management app is static and <strong>completely independent' +
+                    '</strong> from airport app (e.g. you can be signed in into different accounts in two apps).');
         } else {
-            //TODO nie widać, bo ciagle robi document.ready
-            console.log("JESTEM W FROM BUTTON TRUE");
             $('#id_alert_panel')
                 .attr("class", "alert alert-info alert-dismissible text-center justify-content-center mt-5")
                 .append('<button type="button" class="close" data-dismiss="alert">&times;</button>Username or password invalid.');
@@ -38,7 +37,6 @@ function login(from_button) {
 function login_button_clicked() {
     window.localStorage.setItem("username", $('#id_login_username').val());
     window.localStorage.setItem("password", $('#id_login_password').val());
-    console.log("NIE UDALO SIE ZALOGOWAC, JESTEM W LOGIN BUTTON CLICKED");
 
     login(true)
 }
@@ -57,19 +55,11 @@ function logout_button_clicked() {
 
 function get_all_flights_list() {
 
-    // console.log("jestem w get_flight_list (js)");
-    // let input = prompt("jestem w get_flight_list (js)", "");
-
     $('#id_flight_select').empty();
 
     $.ajax({
         type: 'get',
         url: '/crew/get_flight_and_crew_lists/',
-        // data: {
-        //     year: selected_date.slice(0, 4),
-        //     month: selected_date.slice(5, 7),
-        //     day: selected_date.slice(8, 10),
-        // },
         success: result => {
             result['flights'].forEach(flight => {
 
@@ -102,9 +92,6 @@ function get_all_flights_list() {
 }
 
 function get_filtered_flights_list() {
-    console.log("jestem w get_filtered_flight_list (js)");
-    // let input = prompt("jestem w get_flight_list (js)", "");
-
     let selected_day = $('#id_input_date').val();
     $('#id_flight_select').empty();
 
@@ -141,7 +128,7 @@ function get_filtered_flights_list() {
             );
         },
         error: function () {
-            console.log("fail w get flight list");
+            console.log("Get /crew/get_flight_and_crew_lists/ failed");
         }
     });
 }
@@ -150,7 +137,6 @@ function get_filtered_flights_list() {
 function assign_crew() {
     let flight_pk = $("#id_flight_select").val().split(" ")[2];
     let crew = $("#id_crew_select").val().split(" ").slice(3, 5);
-    console.log("flight_pk: ", flight_pk, "crew: ", crew);
 
     $.ajax({
         type: 'post',
@@ -179,14 +165,8 @@ function assign_crew() {
     })
 }
 
-// let pageInitialized = false; // flag to run document.ready only once
 jQuery(document).ready(() => {
-    console.log("ROZPOCZYNAM DOCUMENT.READY");
-    // if (pageInitialized) return;
-    // pageInitialized = true;
-    // if user is logged in (in local storage), then display logged user panel for him:
     login(false);
-    // get_all_flights_list();
 
     $('#id_login_button').click(login_button_clicked);
     $('#id_logout_button').click(logout_button_clicked);

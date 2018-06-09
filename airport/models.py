@@ -79,19 +79,11 @@ class Flight(models.Model):
             if len(flights_ending_this_day) > 4:
                 raise ValidationError("This airplane has already 4 flights planned for this day.")
 
-        flights_the_same = flights.exclude(pk=self.pk) \
-                .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
-                        | Q(arrival_time__range=[self.departure_time, self.arrival_time]))
-
 
         if flights.exclude(pk=self.pk) \
                 .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
                         | Q(arrival_time__range=[self.departure_time, self.arrival_time])) \
                 .filter(crew=self.crew).exists():
-            coto = flights.exclude(pk=self.pk) \
-                .filter(Q(departure_time__range=[self.departure_time, self.arrival_time])
-                        | Q(arrival_time__range=[self.departure_time, self.arrival_time])) \
-                .filter(crew=self.crew)
             raise ValidationError("This crew has another flight in this time.")
 
 class User(AbstractUser):
