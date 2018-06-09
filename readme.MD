@@ -1,4 +1,4 @@
-## Info
+## About
 This is a project for WWW Applications course I attended in 2018 at the Department of Mathematics, Informatics and Mechanics of the University of Warsaw.
 
 ## Description
